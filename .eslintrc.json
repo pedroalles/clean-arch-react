@@ -15,5 +15,8 @@
     "sourceType": "module"
   },
   "plugins": ["react", "@typescript-eslint"],
-  "rules": {}
+  "rules": { 
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "no-useless-constructor": "off"
+  }
 }
