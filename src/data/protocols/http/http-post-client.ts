@@ -2,7 +2,7 @@ import { HttpResponse } from './http-response'
 
 export type HttpPostClientParams<T> = {
   url: string
-  body: T
+  body?: T
 }
 
 export interface IHttpPostClient<T, R> {
