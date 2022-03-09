@@ -22,7 +22,7 @@ const Login: FC = () => {
       <h2>Login</h2>
       <Input type="email" name="email" placeholder="Enter your e-mail"/>
       <Input type="password" name="password" placeholder="Enter your password"/>
-      <button type="submit">Enter</button>
+      <button className={Styles.submit} data-testid="submit" type="submit" disabled>Enter</button>
       <span className={Styles.link}>Sing Up</span>
       <FormStatus />
     </form>
