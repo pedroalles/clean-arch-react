@@ -6,8 +6,8 @@ type Props = HTMLAttributes<HTMLElement>
 
 const Spinner: FC<Props> = (props: Props) => {
   return (
-    <div className={[Styles.spinner, props.className].join(' ')}>
-      <div /><div/><div/>
+    <div data-testid="spinner" className={[Styles.spinner, props.className].join(' ')}>
+      <div /><div /><div />
     </div>
   )
 }

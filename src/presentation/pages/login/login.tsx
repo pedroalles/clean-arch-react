@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, FormEvent, useEffect, useState } from 'react'
 import { Header, Input, FormStatus, Footer } from '@/presentation/components'
 import Styles from './login-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
@@ -34,12 +34,20 @@ const Login: FC<Props> = ({ validation }: Props) => {
     }))
   }, [state.password])
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    setState(prevState => ({
+      ...prevState,
+      isLoading: true
+    }))
+  }
+
   return (
     <div className={Styles.login}>
     <Header />
 
     <Context.Provider value={{ state, setState, errorState }}>
-    <form className={Styles.form}>
+    <form className={Styles.form} onSubmit={handleSubmit}>
       <h2>Login</h2>
       <Input data-testid="email" type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
