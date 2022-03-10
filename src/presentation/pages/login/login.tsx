@@ -43,7 +43,7 @@ const Login: FC<Props> = ({ validation }: Props) => {
       <h2>Login</h2>
       <Input data-testid="email" type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
-      <button className={Styles.submit} data-testid="submit" type="submit" disabled>Enter</button>
+      <button className={Styles.submit} data-testid="submit" type="submit" disabled={!!errorState.email || !!errorState.password}>Enter</button>
       <span className={Styles.link}>Sing Up</span>
       <FormStatus />
     </form>
