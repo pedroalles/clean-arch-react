@@ -81,4 +81,14 @@ describe('Login Component', () => {
     expect(emailStatus.title).toBe('ok')
     expect(emailStatus.textContent).toBe('🟢')
   })
+
+  it('should show valid password state if Validation succeeds', async () => {
+    const { sut: { getByTestId }, validationSpy } = makeSut()
+    validationSpy.errorMessage = null
+    const passwordInput = getByTestId('password')
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
+    const passwordStatus = getByTestId('password-status')
+    expect(passwordStatus.title).toBe('ok')
+    expect(passwordStatus.textContent).toBe('🟢')
+  })
 })
