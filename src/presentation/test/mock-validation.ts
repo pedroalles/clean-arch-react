@@ -1,6 +1,6 @@
-import { Validation } from '@/presentation/protocols/validation'
+import { IValidation } from '@/presentation/protocols/validation'
 
-export class ValidationSpy implements Validation {
+export class ValidationSpy implements IValidation {
   errorMessage: string
   fieldName: string
   fieldValue: string

@@ -2,13 +2,15 @@ import { FC, FormEvent, useEffect, useState } from 'react'
 import { Header, Input, FormStatus, Footer } from '@/presentation/components'
 import Styles from './login-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
-import { Validation } from '@/presentation/protocols/validation'
+import { IValidation } from '@/presentation/protocols/validation'
+import { IAuthentication } from '@/domain/usecases'
 
 type Props = {
-  validation: Validation
+  validation: IValidation
+  authentication: IAuthentication
 }
 
-const Login: FC<Props> = ({ validation }: Props) => {
+const Login: FC<Props> = ({ validation, authentication }: Props) => {
   const [state, setState] = useState({
     isLoading: false,
     email: '',
@@ -34,12 +36,11 @@ const Login: FC<Props> = ({ validation }: Props) => {
     }))
   }, [state.password])
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    setState(prevState => ({
-      ...prevState,
-      isLoading: true
-    }))
+    setState(prevState => ({ ...prevState, isLoading: true }))
+    const { email, password } = state
+    await authentication.auth({ email, password })
   }
 
   return (
