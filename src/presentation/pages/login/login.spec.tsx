@@ -1,7 +1,7 @@
-import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react'
-import Login from './login'
-import faker from 'faker'
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test'
+import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react'
+import faker from 'faker'
+import Login from './login'
 
 type SutTypes = {
   sut: RenderResult
@@ -134,5 +134,12 @@ describe('Login Component', () => {
       email,
       password
     })
+  })
+
+  it('should call Authentication only once', async () => {
+    const { sut: { getByTestId }, authenticationSpy } = makeSut()
+    simulateValidSubmit(getByTestId)
+    simulateValidSubmit(getByTestId)
+    expect(authenticationSpy.callsCount).toBe(1)
   })
 })
