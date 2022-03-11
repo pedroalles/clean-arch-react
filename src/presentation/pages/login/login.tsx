@@ -38,6 +38,7 @@ const Login: FC<Props> = ({ validation, authentication }: Props) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
+    if (state.isLoading) return
     setState(prevState => ({ ...prevState, isLoading: true }))
     const { email, password } = state
     await authentication.auth({ email, password })
