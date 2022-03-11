@@ -38,10 +38,15 @@ const Login: FC<Props> = ({ validation, authentication }: Props) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    if (state.isLoading || errorState.email || errorState.password) return
-    setState(prevState => ({ ...prevState, isLoading: true }))
-    const { email, password } = state
-    await authentication.auth({ email, password })
+    try {
+      if (state.isLoading || errorState.email || errorState.password) return
+      setState(prevState => ({ ...prevState, isLoading: true }))
+      const { email, password } = state
+      await authentication.auth({ email, password })
+    } catch (error) {
+      setErrorState(prevState => ({ ...prevState, main: error.message }))
+      setState(prevState => ({ ...prevState, isLoading: false }))
+    }
   }
   return (
     <div className={Styles.login}>
