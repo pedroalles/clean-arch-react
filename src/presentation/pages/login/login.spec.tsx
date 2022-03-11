@@ -1,3 +1,4 @@
+import { InvalidCredentialsError } from '@/domain/errors'
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test'
 import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react'
 import faker from 'faker'
@@ -149,5 +150,16 @@ describe('Login Component', () => {
     populateEmailField(getByTestId)
     fireEvent.submit(getByTestId('form'))
     expect(authenticationSpy.callsCount).toBe(0)
+  })
+
+  it('should present error if Authentication fails', async () => {
+    const { sut: { getByTestId, findByTestId }, authenticationSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
+    simulateValidSubmit(getByTestId)
+    const errorWrap = getByTestId('error-wrap')
+    const mainError = await findByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message)
+    expect(errorWrap.childElementCount).toBe(1)
   })
 })
