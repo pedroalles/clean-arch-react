@@ -38,18 +38,17 @@ const Login: FC<Props> = ({ validation, authentication }: Props) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    if (state.isLoading) return
+    if (state.isLoading || errorState.email || errorState.password) return
     setState(prevState => ({ ...prevState, isLoading: true }))
     const { email, password } = state
     await authentication.auth({ email, password })
   }
-
   return (
     <div className={Styles.login}>
     <Header />
 
     <Context.Provider value={{ state, setState, errorState }}>
-    <form className={Styles.form} onSubmit={handleSubmit}>
+    <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
       <h2>Login</h2>
       <Input data-testid="email" type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
