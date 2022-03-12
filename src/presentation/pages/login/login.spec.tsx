@@ -4,6 +4,10 @@ import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-libr
 import faker from 'faker'
 import Login from './login'
 import 'jest-localstorage-mock'
+import { unstable_HistoryRouter as CustomRouter } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
+
+const history = createMemoryHistory()
 
 type SutTypes = {
   sut: RenderResult
@@ -19,7 +23,11 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationSpy = new ValidationSpy()
   const authenticationSpy = new AuthenticationSpy()
   validationSpy.errorMessage = params?.validationError
-  const sut = render(<Login validation={validationSpy} authentication={authenticationSpy}/>)
+  const sut = render(
+    <CustomRouter history={history}>
+      <Login validation={validationSpy} authentication={authenticationSpy}/>
+    </CustomRouter>
+  )
   return {
     sut,
     validationSpy,
@@ -175,5 +183,12 @@ describe('Login Component', () => {
     simulateValidSubmit(getByTestId)
     await waitFor(() => getByTestId('form'))
     expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+  })
+
+  it('should go to singup page', async () => {
+    const { sut: { getByTestId } } = makeSut()
+    const register = getByTestId('singup')
+    fireEvent.click(register)
+    expect(history.location.pathname).toBe('/singup')
   })
 })
