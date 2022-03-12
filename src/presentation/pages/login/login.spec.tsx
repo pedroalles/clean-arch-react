@@ -7,7 +7,7 @@ import 'jest-localstorage-mock'
 import { unstable_HistoryRouter as CustomRouter } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-const history = createMemoryHistory()
+const history = createMemoryHistory({ initialEntries: ['/login'] })
 
 type SutTypes = {
   sut: RenderResult
@@ -183,6 +183,7 @@ describe('Login Component', () => {
     simulateValidSubmit(getByTestId)
     await waitFor(() => getByTestId('form'))
     expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+    expect(history.location.pathname).toBe('/')
   })
 
   it('should go to singup page', async () => {
