@@ -4,6 +4,7 @@ import Styles from './login-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
 import { IValidation } from '@/presentation/protocols/validation'
 import { IAuthentication } from '@/domain/usecases'
+import { Link } from 'react-router-dom'
 
 type Props = {
   validation: IValidation
@@ -59,7 +60,7 @@ const Login: FC<Props> = ({ validation, authentication }: Props) => {
       <Input data-testid="email" type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
       <button className={Styles.submit} data-testid="submit" type="submit" disabled={!!errorState.email || !!errorState.password}>Enter</button>
-      <span className={Styles.link}>Sing Up</span>
+      <Link data-testid="singup" to="/singup" className={Styles.link}>Sing Up</Link>
       <FormStatus />
     </form>
     </Context.Provider>
