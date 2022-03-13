@@ -1,13 +1,13 @@
 import { FC } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Login } from '@/presentation/pages'
 import '@/presentation/styles/global.scss'
 const Router:FC = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path='/login' element={<Login />} />
-      </Routes>
+      <Switch>
+      <Route path="/login" exact component={Login} />
+      </Switch>
     </BrowserRouter>
   )
 }
