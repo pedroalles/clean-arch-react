@@ -59,6 +59,26 @@ const testStatusForField = (getByTestId, fieldName: string, validationError?:str
   expect(emailStatus.textContent).toBe(validationError ? '🔴' : '🟢')
 }
 
+const testErrorWrapChildCount = (getByTestId, count: number):void => {
+  const errorWrap = getByTestId('error-wrap')
+  expect(errorWrap.childElementCount).toBe(count)
+}
+
+const testElementExists = (getByTestId, elementTestId: string):void => {
+  const element = getByTestId(elementTestId)
+  expect(element).toBeTruthy()
+}
+
+const testElemetText = (getByTestId, elementTestId: string, text: string):void => {
+  const element = getByTestId(elementTestId)
+  expect(element.textContent).toBe(text)
+}
+
+const testButtonStatus = (getByTestId, elementTestId: string, isDisabled: Boolean):void => {
+  const button = getByTestId(elementTestId) as HTMLButtonElement
+  expect(button.disabled).toBe(isDisabled)
+}
+
 describe('Login Component', () => {
   afterEach(() => {
     cleanup()
@@ -71,10 +91,8 @@ describe('Login Component', () => {
   it('should start with initial state', () => {
     const validationError = faker.random.words()
     const { sut: { getByTestId } } = makeSut({ validationError })
-    const errorWrap = getByTestId('error-wrap')
-    expect(errorWrap.childElementCount).toBe(0)
-    const submitButton = getByTestId('submit') as HTMLButtonElement
-    expect(submitButton.disabled).toBeTruthy()
+    testErrorWrapChildCount(getByTestId, 0)
+    testButtonStatus(getByTestId, 'submit', true)
     testStatusForField(getByTestId, 'email', validationError)
     testStatusForField(getByTestId, 'password', validationError)
   })
@@ -125,15 +143,13 @@ describe('Login Component', () => {
     const { sut: { getByTestId } } = makeSut()
     populateEmailField(getByTestId)
     populatePasswordField(getByTestId)
-    const submitButton = getByTestId('submit') as HTMLButtonElement
-    expect(submitButton.disabled).toBeFalsy()
+    testButtonStatus(getByTestId, 'submit', false)
   })
 
   it('should show load spinner on submit', async () => {
     const { sut: { getByTestId } } = makeSut()
     await testValidSubmit(getByTestId)
-    const spinner = getByTestId('spinner')
-    expect(spinner).toBeTruthy()
+    testElementExists(getByTestId, 'spinner')
   })
 
   it('should call Authentication with correct values', async () => {
@@ -141,10 +157,7 @@ describe('Login Component', () => {
     const email = faker.internet.email()
     const password = faker.internet.password()
     await testValidSubmit(getByTestId, email, password)
-    expect(authenticationSpy.params).toEqual({
-      email,
-      password
-    })
+    expect(authenticationSpy.params).toEqual({ email, password })
   })
 
   it('should call Authentication only once', async () => {
@@ -167,10 +180,8 @@ describe('Login Component', () => {
     const error = new InvalidCredentialsError()
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
     await testValidSubmit(getByTestId)
-    const errorWrap = getByTestId('error-wrap')
-    const mainError = getByTestId('main-error')
-    expect(mainError.textContent).toBe(error.message)
-    expect(errorWrap.childElementCount).toBe(1)
+    testErrorWrapChildCount(getByTestId, 1)
+    testElemetText(getByTestId, 'main-error', error.message)
   })
 
   it('should add accessToken to localstorage on success', async () => {
