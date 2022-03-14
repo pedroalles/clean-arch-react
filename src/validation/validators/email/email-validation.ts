@@ -7,6 +7,7 @@ export class EmailValidation implements IFieldValidation {
   ) {}
 
   validate (value: string): Error {
-    return value ? null : new InvalidFieldError()
+    const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    return emailRegex.test(value) ? null : new InvalidFieldError()
   }
 }
