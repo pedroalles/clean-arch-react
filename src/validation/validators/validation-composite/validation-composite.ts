@@ -12,5 +12,6 @@ export class ValidationComposite implements IValidation {
       const error = validator.validate(fieldValue)
       if (error) return error.message
     }
+    return null
   }
 }
