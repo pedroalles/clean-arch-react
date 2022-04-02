@@ -1,5 +1,5 @@
+import { Helper, AuthenticationSpy, ValidationSpy, SaveAccessTokenMock } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
-import { AuthenticationSpy, ValidationSpy, SaveAccessTokenMock } from '@/presentation/test'
 import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
 import faker from 'faker'
 import Login from './login'
@@ -59,17 +59,6 @@ const testValidSubmit = async (getByTestId, email = faker.internet.email(), pass
   await waitFor(() => form)
 }
 
-const testStatusForField = (getByTestId, fieldName: string, validationError?:string):void => {
-  const emailStatus = getByTestId(`${fieldName}-status`)
-  expect(emailStatus.title).toBe(validationError || 'ok')
-  expect(emailStatus.textContent).toBe(validationError ? '🔴' : '🟢')
-}
-
-const testErrorWrapChildCount = (getByTestId, count: number):void => {
-  const errorWrap = getByTestId('error-wrap')
-  expect(errorWrap.childElementCount).toBe(count)
-}
-
 const testElementExists = (getByTestId, elementTestId: string):void => {
   const element = getByTestId(elementTestId)
   expect(element).toBeTruthy()
@@ -80,11 +69,6 @@ const testElemetText = (getByTestId, elementTestId: string, text: string):void =
   expect(element.textContent).toBe(text)
 }
 
-const testButtonStatus = (getByTestId, elementTestId: string, isDisabled: Boolean):void => {
-  const button = getByTestId(elementTestId) as HTMLButtonElement
-  expect(button.disabled).toBe(isDisabled)
-}
-
 describe('Login Component', () => {
   afterEach(() => {
     cleanup()
@@ -93,10 +77,10 @@ describe('Login Component', () => {
   it('should start with initial state', () => {
     const validationError = faker.random.words()
     const { sut: { getByTestId } } = makeSut({ validationError })
-    testErrorWrapChildCount(getByTestId, 0)
-    testButtonStatus(getByTestId, 'submit', true)
-    testStatusForField(getByTestId, 'email', validationError)
-    testStatusForField(getByTestId, 'password', validationError)
+    Helper.testChildCount(getByTestId, 'error-wrap', 0)
+    Helper.testButtonStatus(getByTestId, 'submit', true)
+    Helper.testStatusForField(getByTestId, 'email', validationError)
+    Helper.testStatusForField(getByTestId, 'password', validationError)
   })
 
   it('should call Validation with correct email', async () => {
@@ -119,33 +103,33 @@ describe('Login Component', () => {
     const validationError = faker.random.words()
     const { sut: { getByTestId } } = makeSut({ validationError })
     populateEmailField(getByTestId)
-    testStatusForField(getByTestId, 'email', validationError)
+    Helper.testStatusForField(getByTestId, 'email', validationError)
   })
 
   it('should show password error if Validation fails', async () => {
     const validationError = faker.random.words()
     const { sut: { getByTestId } } = makeSut({ validationError })
     populatePasswordField(getByTestId)
-    testStatusForField(getByTestId, 'password', validationError)
+    Helper.testStatusForField(getByTestId, 'password', validationError)
   })
 
   it('should show valid email state if Validation succeeds', async () => {
     const { sut: { getByTestId } } = makeSut()
     populateEmailField(getByTestId)
-    testStatusForField(getByTestId, 'email')
+    Helper.testStatusForField(getByTestId, 'email')
   })
 
   it('should show valid password state if Validation succeeds', async () => {
     const { sut: { getByTestId } } = makeSut()
     populatePasswordField(getByTestId)
-    testStatusForField(getByTestId, 'password')
+    Helper.testStatusForField(getByTestId, 'password')
   })
 
   it('should enable submit button if form is valid', async () => {
     const { sut: { getByTestId } } = makeSut()
     populateEmailField(getByTestId)
     populatePasswordField(getByTestId)
-    testButtonStatus(getByTestId, 'submit', false)
+    Helper.testButtonStatus(getByTestId, 'submit', false)
   })
 
   it('should show load spinner on submit', async () => {
@@ -182,7 +166,7 @@ describe('Login Component', () => {
     const error = new InvalidCredentialsError()
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
     await testValidSubmit(getByTestId)
-    testErrorWrapChildCount(getByTestId, 1)
+    Helper.testChildCount(getByTestId, 'error-wrap', 1)
     testElemetText(getByTestId, 'main-error', error.message)
   })
 
@@ -199,7 +183,7 @@ describe('Login Component', () => {
     const error = new InvalidCredentialsError()
     jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
     await testValidSubmit(getByTestId)
-    testErrorWrapChildCount(getByTestId, 1)
+    Helper.testChildCount(getByTestId, 'error-wrap', 1)
     testElemetText(getByTestId, 'main-error', error.message)
   })
 

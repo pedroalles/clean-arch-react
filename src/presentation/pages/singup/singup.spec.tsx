@@ -1,3 +1,4 @@
+import { Helper } from '@/presentation/test'
 import { render, RenderResult } from '@testing-library/react'
 import SingUp from './singup'
 
@@ -12,31 +13,15 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const testChildCount = (getByTestId, fieldName: string, count: number):void => {
-  const el = getByTestId(fieldName)
-  expect(el.childElementCount).toBe(count)
-}
-
-const testButtonStatus = (getByTestId, elementTestId: string, isDisabled: Boolean):void => {
-  const button = getByTestId(elementTestId) as HTMLButtonElement
-  expect(button.disabled).toBe(isDisabled)
-}
-
-const testStatusForField = (getByTestId, fieldName: string, validationError?:string):void => {
-  const fieldStatus = getByTestId(`${fieldName}-status`)
-  expect(fieldStatus.title).toBe(validationError || 'ok')
-  expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '🟢')
-}
-
 describe('Singup Component', () => {
   it('should start with initial state', () => {
     const validationError = 'Required Field'
     const { sut: { getByTestId } } = makeSut()
-    testChildCount(getByTestId, 'error-wrap', 0)
-    testButtonStatus(getByTestId, 'submit', true)
-    testStatusForField(getByTestId, 'name', validationError)
-    testStatusForField(getByTestId, 'email', validationError)
-    testStatusForField(getByTestId, 'password', validationError)
-    testStatusForField(getByTestId, 'passwordConfirmation', validationError)
+    Helper.testChildCount(getByTestId, 'error-wrap', 0)
+    Helper.testButtonStatus(getByTestId, 'submit', true)
+    Helper.testStatusForField(getByTestId, 'name', validationError)
+    Helper.testStatusForField(getByTestId, 'email', validationError)
+    Helper.testStatusForField(getByTestId, 'password', validationError)
+    Helper.testStatusForField(getByTestId, 'passwordConfirmation', validationError)
   })
 })
