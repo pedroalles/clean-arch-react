@@ -1,19 +1,33 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Header, Input, FormStatus, Footer } from '@/presentation/components'
 import Styles from './singup-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
+import { IValidation } from '@/presentation/protocols/validation'
 
-const SingUp: FC = () => {
+type Props = {
+  validation: IValidation
+}
+
+const SingUp: FC<Props> = ({ validation }: Props) => {
   const [state, setState] = useState({
-    isLoading: false
+    isLoading: false,
+    name: ''
   })
-  const [errorState] = useState({
-    name: 'Required Field',
+  const [errorState, setErrorState] = useState({
+    name: '',
     email: 'Required Field',
     password: 'Required Field',
     passwordConfirmation: 'Required Field',
     main: ''
   })
+
+  useEffect(() => {
+    setErrorState(prevState => ({
+      ...prevState,
+      name: validation.validate('name', state.name)
+    }))
+  }, [state.name])
+
   return (
     <div className={Styles.singup}>
     <Header />
