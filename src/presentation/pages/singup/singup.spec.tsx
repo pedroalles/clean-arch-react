@@ -1,5 +1,5 @@
 import { Helper, ValidationSpy } from '@/presentation/test'
-import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react'
+import { cleanup, render, RenderResult } from '@testing-library/react'
 import faker from 'faker'
 import SingUp from './singup'
 
@@ -25,11 +25,6 @@ const makeSut = (params?: SutParams): SutTypes => {
   }
 }
 
-const populateField = (getByTestId, fieldName: string, value = faker.random.word()): void => {
-  const emailInput = getByTestId(fieldName)
-  fireEvent.input(emailInput, { target: { value } })
-}
-
 describe('Singup Component', () => {
   afterEach(() => {
     cleanup()
@@ -49,7 +44,7 @@ describe('Singup Component', () => {
   it('should show name error if Validation fails', async () => {
     const validationError = faker.random.words()
     const { sut: { getByTestId } } = makeSut({ validationError })
-    populateField(getByTestId, 'name')
+    Helper.populateField(getByTestId, 'name')
     Helper.testStatusForField(getByTestId, 'name', validationError)
   })
 })
