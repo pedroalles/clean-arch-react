@@ -38,7 +38,7 @@ describe('Singup Component', () => {
     Helper.testStatusForField(getByTestId, 'name', validationError)
     Helper.testStatusForField(getByTestId, 'email', validationError)
     Helper.testStatusForField(getByTestId, 'password', validationError)
-    Helper.testStatusForField(getByTestId, 'passwordConfirmation', 'Required Field')
+    Helper.testStatusForField(getByTestId, 'passwordConfirmation', validationError)
   })
 
   it('should show name error if Validation fails', async () => {
@@ -60,5 +60,12 @@ describe('Singup Component', () => {
     const { sut: { getByTestId } } = makeSut({ validationError })
     Helper.populateField(getByTestId, 'password')
     Helper.testStatusForField(getByTestId, 'password', validationError)
+  })
+
+  it('should show passwordConfirmation error if Validation fails', async () => {
+    const validationError = faker.random.words()
+    const { sut: { getByTestId } } = makeSut({ validationError })
+    Helper.populateField(getByTestId, 'passwordConfirmation')
+    Helper.testStatusForField(getByTestId, 'passwordConfirmation', validationError)
   })
 })
