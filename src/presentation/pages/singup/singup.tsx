@@ -13,13 +13,14 @@ const SingUp: FC<Props> = ({ validation }: Props) => {
     isLoading: false,
     name: '',
     email: '',
-    password: ''
+    password: '',
+    passwordConfirmation: ''
   })
   const [errorState, setErrorState] = useState({
     name: '',
     email: '',
     password: '',
-    passwordConfirmation: 'Required Field',
+    passwordConfirmation: '',
     main: ''
   })
 
@@ -28,7 +29,8 @@ const SingUp: FC<Props> = ({ validation }: Props) => {
       ...prevState,
       name: validation.validate('name', state.name),
       email: validation.validate('email', state.email),
-      password: validation.validate('password', state.password)
+      password: validation.validate('password', state.password),
+      passwordConfirmation: validation.validate('passwordConfirmation', state.passwordConfirmation)
     }))
   }, [state.name, state.email])
 
