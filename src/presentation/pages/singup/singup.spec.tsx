@@ -36,7 +36,7 @@ describe('Singup Component', () => {
     Helper.testChildCount(getByTestId, 'error-wrap', 0)
     Helper.testButtonStatus(getByTestId, 'submit', true)
     Helper.testStatusForField(getByTestId, 'name', validationError)
-    Helper.testStatusForField(getByTestId, 'email', 'Required Field')
+    Helper.testStatusForField(getByTestId, 'email', validationError)
     Helper.testStatusForField(getByTestId, 'password', 'Required Field')
     Helper.testStatusForField(getByTestId, 'passwordConfirmation', 'Required Field')
   })
@@ -46,5 +46,12 @@ describe('Singup Component', () => {
     const { sut: { getByTestId } } = makeSut({ validationError })
     Helper.populateField(getByTestId, 'name')
     Helper.testStatusForField(getByTestId, 'name', validationError)
+  })
+
+  it('should show email error if Validation fails', async () => {
+    const validationError = faker.random.words()
+    const { sut: { getByTestId } } = makeSut({ validationError })
+    Helper.populateField(getByTestId, 'email')
+    Helper.testStatusForField(getByTestId, 'email', validationError)
   })
 })
