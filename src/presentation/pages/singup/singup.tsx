@@ -11,11 +11,12 @@ type Props = {
 const SingUp: FC<Props> = ({ validation }: Props) => {
   const [state, setState] = useState({
     isLoading: false,
-    name: ''
+    name: '',
+    email: ''
   })
   const [errorState, setErrorState] = useState({
     name: '',
-    email: 'Required Field',
+    email: '',
     password: 'Required Field',
     passwordConfirmation: 'Required Field',
     main: ''
@@ -24,9 +25,10 @@ const SingUp: FC<Props> = ({ validation }: Props) => {
   useEffect(() => {
     setErrorState(prevState => ({
       ...prevState,
-      name: validation.validate('name', state.name)
+      name: validation.validate('name', state.name),
+      email: validation.validate('email', state.email)
     }))
-  }, [state.name])
+  }, [state.name, state.email])
 
   return (
     <div className={Styles.singup}>
