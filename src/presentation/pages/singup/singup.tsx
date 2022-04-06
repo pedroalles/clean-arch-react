@@ -44,7 +44,7 @@ const SingUp: FC<Props> = ({ validation }: Props) => {
       <Input type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
       <Input type="password" name="passwordConfirmation" placeholder="Confirm the password"/>
-      <button data-testid="submit" className={Styles.submit} type="submit" disabled>Enter</button>
+      <button data-testid="submit" className={Styles.submit} type="submit" disabled={!!errorState.email || !!errorState.password || !!errorState.name || !!errorState.passwordConfirmation}>Enter</button>
       <span data-testid="singup" className={Styles.link}>Back to login</span>
       <FormStatus />
     </form>
