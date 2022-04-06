@@ -92,4 +92,13 @@ describe('Singup Component', () => {
     Helper.populateField(getByTestId, 'passwordConfirmation')
     Helper.testStatusForField(getByTestId, 'passwordConfirmation')
   })
+
+  it('should enable submit button if form is valid', async () => {
+    const { sut: { getByTestId } } = makeSut()
+    Helper.populateField(getByTestId, 'name')
+    Helper.populateField(getByTestId, 'email')
+    Helper.populateField(getByTestId, 'password')
+    Helper.populateField(getByTestId, 'passwordConfirmation')
+    Helper.testButtonStatus(getByTestId, 'submit', false)
+  })
 })
