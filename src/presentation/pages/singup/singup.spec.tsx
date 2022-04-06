@@ -74,4 +74,10 @@ describe('Singup Component', () => {
     Helper.populateField(getByTestId, 'name')
     Helper.testStatusForField(getByTestId, 'name')
   })
+
+  it('should show valid email state if Validation succeeds', async () => {
+    const { sut: { getByTestId } } = makeSut()
+    Helper.populateField(getByTestId, 'email')
+    Helper.testStatusForField(getByTestId, 'email')
+  })
 })
