@@ -35,11 +35,6 @@ const simulateValidSubmit = async (getByTestId, name = faker.name.findName(), em
   await waitFor(() => form)
 }
 
-const testElementExists = (getByTestId, elementTestId: string):void => {
-  const element = getByTestId(elementTestId)
-  expect(element).toBeTruthy()
-}
-
 describe('Singup Component', () => {
   afterEach(() => {
     cleanup()
@@ -120,6 +115,6 @@ describe('Singup Component', () => {
   it('should show load spinner on submit', async () => {
     const { sut: { getByTestId } } = makeSut()
     await simulateValidSubmit(getByTestId)
-    testElementExists(getByTestId, 'spinner')
+    Helper.testElementExists(getByTestId, 'spinner')
   })
 })

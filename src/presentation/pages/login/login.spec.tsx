@@ -41,17 +41,12 @@ const makeSut = (params?: SutParams): SutTypes => {
   }
 }
 
-const testValidSubmit = async (getByTestId, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
+const simulateValidSubmit = async (getByTestId, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
   Helper.populateField(getByTestId, 'email', email)
   Helper.populateField(getByTestId, 'password', password)
   const form = getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
-}
-
-const testElementExists = (getByTestId, elementTestId: string):void => {
-  const element = getByTestId(elementTestId)
-  expect(element).toBeTruthy()
 }
 
 const testElemetText = (getByTestId, elementTestId: string, text: string):void => {
@@ -124,29 +119,29 @@ describe('Login Component', () => {
 
   it('should show load spinner on submit', async () => {
     const { sut: { getByTestId } } = makeSut()
-    await testValidSubmit(getByTestId)
-    testElementExists(getByTestId, 'spinner')
+    await simulateValidSubmit(getByTestId)
+    Helper.testElementExists(getByTestId, 'spinner')
   })
 
   it('should call Authentication with correct values', async () => {
     const { sut: { getByTestId }, authenticationSpy } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
-    await testValidSubmit(getByTestId, email, password)
+    await simulateValidSubmit(getByTestId, email, password)
     expect(authenticationSpy.params).toEqual({ email, password })
   })
 
   it('should call Authentication only once', async () => {
     const { sut: { getByTestId }, authenticationSpy } = makeSut()
-    await testValidSubmit(getByTestId)
-    await testValidSubmit(getByTestId)
+    await simulateValidSubmit(getByTestId)
+    await simulateValidSubmit(getByTestId)
     expect(authenticationSpy.callsCount).toBe(1)
   })
 
   it('should not call Authentication if form is invalid', async () => {
     const validationError = faker.random.words()
     const { sut: { getByTestId }, authenticationSpy } = makeSut({ validationError })
-    await testValidSubmit(getByTestId)
+    await simulateValidSubmit(getByTestId)
     expect(authenticationSpy.callsCount).toBe(0)
   })
 
@@ -154,14 +149,14 @@ describe('Login Component', () => {
     const { sut: { getByTestId }, authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
-    await testValidSubmit(getByTestId)
+    await simulateValidSubmit(getByTestId)
     Helper.testChildCount(getByTestId, 'error-wrap', 1)
     testElemetText(getByTestId, 'main-error', error.message)
   })
 
   it('should call SaveAccessToken on success', async () => {
     const { sut: { getByTestId }, authenticationSpy, saveAccessTokenMock } = makeSut()
-    await testValidSubmit(getByTestId)
+    await simulateValidSubmit(getByTestId)
     expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken)
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
@@ -171,7 +166,7 @@ describe('Login Component', () => {
     const { sut: { getByTestId }, saveAccessTokenMock } = makeSut()
     const error = new InvalidCredentialsError()
     jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
-    await testValidSubmit(getByTestId)
+    await simulateValidSubmit(getByTestId)
     Helper.testChildCount(getByTestId, 'error-wrap', 1)
     testElemetText(getByTestId, 'main-error', error.message)
   })

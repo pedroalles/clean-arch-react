@@ -21,3 +21,8 @@ export const populateField = (getByTestId, fieldName: string, value = faker.rand
   const emailInput = getByTestId(fieldName)
   fireEvent.input(emailInput, { target: { value } })
 }
+
+export const testElementExists = (getByTestId, elementTestId: string):void => {
+  const element = getByTestId(elementTestId)
+  expect(element).toBeTruthy()
+}
