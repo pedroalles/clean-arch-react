@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, FormEvent, useEffect, useState } from 'react'
 import { Header, Input, FormStatus, Footer } from '@/presentation/components'
 import Styles from './singup-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
@@ -34,11 +34,16 @@ const SingUp: FC<Props> = ({ validation }: Props) => {
     }))
   }, [state.name, state.email])
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
+    setState(prevState => ({ ...prevState, isLoading: true }))
+  }
+
   return (
     <div className={Styles.singup}>
     <Header />
     <Context.Provider value={{ state, setState, errorState }}>
-    <form className={Styles.form}>
+    <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
       <h2>Criar Conta</h2>
       <Input type="text" name="name" placeholder="Enter your name" />
       <Input type="email" name="email" placeholder="Enter your e-mail" />
