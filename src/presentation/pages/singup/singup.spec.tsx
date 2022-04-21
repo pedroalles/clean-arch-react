@@ -128,4 +128,11 @@ describe('Singup Component', () => {
     await simulateValidSubmit(getByTestId, name, email, password)
     expect(addAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password })
   })
+
+  it('should call AddAccount only once', async () => {
+    const { sut: { getByTestId }, addAccountSpy } = makeSut()
+    await simulateValidSubmit(getByTestId)
+    await simulateValidSubmit(getByTestId)
+    expect(addAccountSpy.callsCount).toBe(1)
+  })
 })
