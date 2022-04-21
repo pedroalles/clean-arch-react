@@ -3,12 +3,14 @@ import { Header, Input, FormStatus, Footer } from '@/presentation/components'
 import Styles from './singup-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
 import { IValidation } from '@/presentation/protocols/validation'
+import { IAddAccount } from '@/domain/usecases'
 
 type Props = {
   validation: IValidation
+  addAccount: IAddAccount
 }
 
-const SingUp: FC<Props> = ({ validation }: Props) => {
+const SingUp: FC<Props> = ({ validation, addAccount }: Props) => {
   const [state, setState] = useState({
     isLoading: false,
     name: '',
@@ -37,6 +39,12 @@ const SingUp: FC<Props> = ({ validation }: Props) => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     setState(prevState => ({ ...prevState, isLoading: true }))
+    await addAccount.add({
+      name: state.name,
+      email: state.email,
+      password: state.password,
+      passwordConfirmation: state.passwordConfirmation
+    })
   }
 
   return (
