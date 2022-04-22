@@ -1,12 +1,17 @@
 import { EmailInUseError } from '@/domain/errors'
-import { AddAccountSpy, Helper, ValidationSpy } from '@/presentation/test'
+import { AddAccountSpy, Helper, SaveAccessTokenMock, ValidationSpy } from '@/presentation/test'
 import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
 import faker from 'faker'
 import SingUp from './singup'
+import { createMemoryHistory } from 'history'
+import { Router } from 'react-router-dom'
+
+const history = createMemoryHistory({ initialEntries: ['/login'] })
 
 type SutTypes = {
   sut: RenderResult
   addAccountSpy: AddAccountSpy
+  saveAccessTokenMock: SaveAccessTokenMock
 }
 
 type SutParams = {
@@ -17,14 +22,19 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationSpy = new ValidationSpy()
   validationSpy.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
+  const saveAccessTokenMock = new SaveAccessTokenMock()
   const sut = render(
-    <SingUp
-      validation={validationSpy}
-      addAccount = {addAccountSpy}
-    />)
+    <Router history={history}>
+      <SingUp
+        validation={validationSpy}
+        addAccount = {addAccountSpy}
+        saveAccessToken={saveAccessTokenMock}
+      />
+    </Router>)
   return {
     sut,
-    addAccountSpy
+    addAccountSpy,
+    saveAccessTokenMock
   }
 }
 
@@ -151,5 +161,13 @@ describe('Singup Component', () => {
     await simulateValidSubmit(getByTestId)
     Helper.testChildCount(getByTestId, 'error-wrap', 1)
     Helper.testElemetText(getByTestId, 'main-error', error.message)
+  })
+
+  it('should call SaveAccessToken on success', async () => {
+    const { sut: { getByTestId }, addAccountSpy, saveAccessTokenMock } = makeSut()
+    await simulateValidSubmit(getByTestId)
+    expect(saveAccessTokenMock.accessToken).toBe(addAccountSpy.account.accessToken)
+    expect(history.length).toBe(1)
+    expect(history.location.pathname).toBe('/')
   })
 })
