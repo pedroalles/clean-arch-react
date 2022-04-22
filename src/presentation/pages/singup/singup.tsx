@@ -3,14 +3,17 @@ import { Header, Input, FormStatus, Footer } from '@/presentation/components'
 import Styles from './singup-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
 import { IValidation } from '@/presentation/protocols/validation'
-import { IAddAccount } from '@/domain/usecases'
+import { IAddAccount, ISaveAccessToken } from '@/domain/usecases'
+import { useHistory } from 'react-router-dom'
 
 type Props = {
   validation: IValidation
   addAccount: IAddAccount
+  saveAccessToken : ISaveAccessToken
 }
 
-const SingUp: FC<Props> = ({ validation, addAccount }: Props) => {
+const SingUp: FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) => {
+  const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
     name: '',
@@ -41,12 +44,14 @@ const SingUp: FC<Props> = ({ validation, addAccount }: Props) => {
     try {
       if (state.isLoading || errorState.name || errorState.email || errorState.password || errorState.passwordConfirmation) return
       setState(prevState => ({ ...prevState, isLoading: true }))
-      await addAccount.add({
+      const account = await addAccount.add({
         name: state.name,
         email: state.email,
         password: state.password,
         passwordConfirmation: state.passwordConfirmation
       })
+      await saveAccessToken.save(account.accessToken)
+      history.replace('/')
     } catch (error) {
       setErrorState(prevState => ({ ...prevState, main: error.message }))
       setState(prevState => ({ ...prevState, isLoading: false }))
