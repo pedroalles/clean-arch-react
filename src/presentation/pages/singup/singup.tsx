@@ -4,7 +4,7 @@ import Styles from './singup-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
 import { IValidation } from '@/presentation/protocols/validation'
 import { IAddAccount, ISaveAccessToken } from '@/domain/usecases'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 type Props = {
   validation: IValidation
@@ -69,11 +69,10 @@ const SingUp: FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) =
       <Input type="password" name="password" placeholder="Enter your password"/>
       <Input type="password" name="passwordConfirmation" placeholder="Confirm the password"/>
       <button data-testid="submit" className={Styles.submit} type="submit" disabled={!!errorState.email || !!errorState.password || !!errorState.name || !!errorState.passwordConfirmation}>Enter</button>
-      <span data-testid="singup" className={Styles.link}>Back to login</span>
+      <Link data-testid="login" to="/login" replace className={Styles.link}>Log In</Link>
       <FormStatus />
     </form>
     </Context.Provider>
-
     <Footer />
   </div>
   )
