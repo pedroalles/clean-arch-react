@@ -179,4 +179,12 @@ describe('Singup Component', () => {
     Helper.testChildCount(getByTestId, 'error-wrap', 1)
     Helper.testElemetText(getByTestId, 'main-error', error.message)
   })
+
+  it('should go to login page', async () => {
+    const { sut: { getByTestId } } = makeSut()
+    const loginLink = getByTestId('login')
+    fireEvent.click(loginLink)
+    expect(history.length).toBe(1)
+    expect(history.location.pathname).toBe('/login')
+  })
 })
