@@ -38,7 +38,7 @@ const SingUp: FC<Props> = ({ validation, addAccount }: Props) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    if (state.isLoading || errorState.email || errorState.password) return
+    if (state.isLoading || errorState.name || errorState.email || errorState.password || errorState.passwordConfirmation) return
     setState(prevState => ({ ...prevState, isLoading: true }))
     await addAccount.add({
       name: state.name,
