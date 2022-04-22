@@ -135,4 +135,11 @@ describe('Singup Component', () => {
     await simulateValidSubmit(getByTestId)
     expect(addAccountSpy.callsCount).toBe(1)
   })
+
+  it('should not call AddAccount if form is invalid', async () => {
+    const validationError = faker.random.words()
+    const { sut: { getByTestId }, addAccountSpy } = makeSut({ validationError })
+    await simulateValidSubmit(getByTestId)
+    expect(addAccountSpy.callsCount).toBe(0)
+  })
 })
