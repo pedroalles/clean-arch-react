@@ -38,11 +38,6 @@ const simulateValidSubmit = async (getByTestId, name = faker.name.findName(), em
   await waitFor(() => form)
 }
 
-const testElemetText = (getByTestId, elementTestId: string, text: string):void => {
-  const element = getByTestId(elementTestId)
-  expect(element.textContent).toBe(text)
-}
-
 describe('Singup Component', () => {
   afterEach(() => {
     cleanup()
@@ -155,6 +150,6 @@ describe('Singup Component', () => {
     jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
     await simulateValidSubmit(getByTestId)
     Helper.testChildCount(getByTestId, 'error-wrap', 1)
-    testElemetText(getByTestId, 'main-error', error.message)
+    Helper.testElemetText(getByTestId, 'main-error', error.message)
   })
 })

@@ -49,11 +49,6 @@ const simulateValidSubmit = async (getByTestId, email = faker.internet.email(), 
   await waitFor(() => form)
 }
 
-const testElemetText = (getByTestId, elementTestId: string, text: string):void => {
-  const element = getByTestId(elementTestId)
-  expect(element.textContent).toBe(text)
-}
-
 describe('Login Component', () => {
   afterEach(() => {
     cleanup()
@@ -151,7 +146,7 @@ describe('Login Component', () => {
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
     await simulateValidSubmit(getByTestId)
     Helper.testChildCount(getByTestId, 'error-wrap', 1)
-    testElemetText(getByTestId, 'main-error', error.message)
+    Helper.testElemetText(getByTestId, 'main-error', error.message)
   })
 
   it('should call SaveAccessToken on success', async () => {
@@ -168,7 +163,7 @@ describe('Login Component', () => {
     jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
     await simulateValidSubmit(getByTestId)
     Helper.testChildCount(getByTestId, 'error-wrap', 1)
-    testElemetText(getByTestId, 'main-error', error.message)
+    Helper.testElemetText(getByTestId, 'main-error', error.message)
   })
 
   it('should go to singup page', async () => {

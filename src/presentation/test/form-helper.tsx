@@ -26,3 +26,8 @@ export const testElementExists = (getByTestId, elementTestId: string):void => {
   const element = getByTestId(elementTestId)
   expect(element).toBeTruthy()
 }
+
+export const testElemetText = (getByTestId, elementTestId: string, text: string):void => {
+  const element = getByTestId(elementTestId)
+  expect(element.textContent).toBe(text)
+}
