@@ -16,6 +16,7 @@ const SingUp: FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) =
   const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
+    isInvalidForm: true,
     name: '',
     email: '',
     password: '',
@@ -30,19 +31,29 @@ const SingUp: FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) =
   })
 
   useEffect(() => {
+    const name = validation.validate('name', state.name)
+    const email = validation.validate('email', state.email)
+    const password = validation.validate('password', state.password)
+    const passwordConfirmation = validation.validate('passwordConfirmation', state.passwordConfirmation)
+
+    setState(prevState => ({
+      ...prevState,
+      isInvalidForm: !!name || !!email || !!password || !!passwordConfirmation
+    }))
+
     setErrorState(prevState => ({
       ...prevState,
-      name: validation.validate('name', state.name),
-      email: validation.validate('email', state.email),
-      password: validation.validate('password', state.password),
-      passwordConfirmation: validation.validate('passwordConfirmation', state.passwordConfirmation)
+      name,
+      email,
+      password,
+      passwordConfirmation
     }))
-  }, [state.name, state.email])
+  }, [state.name, state.email, state.password, state.passwordConfirmation])
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     try {
-      if (state.isLoading || errorState.name || errorState.email || errorState.password || errorState.passwordConfirmation) return
+      if (state.isLoading || state.isInvalidForm) return
       setState(prevState => ({ ...prevState, isLoading: true }))
       const account = await addAccount.add({
         name: state.name,
@@ -68,7 +79,7 @@ const SingUp: FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) =
       <Input type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
       <Input type="password" name="passwordConfirmation" placeholder="Confirm the password"/>
-      <button data-testid="submit" className={Styles.submit} type="submit" disabled={!!errorState.email || !!errorState.password || !!errorState.name || !!errorState.passwordConfirmation}>Enter</button>
+      <button data-testid="submit" className={Styles.submit} type="submit" disabled={state.isInvalidForm}>Enter</button>
       <Link data-testid="login" to="/login" replace className={Styles.link}>Log In</Link>
       <FormStatus />
     </form>
