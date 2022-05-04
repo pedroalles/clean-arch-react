@@ -1,5 +1,5 @@
 import { FC, FormEvent, useEffect, useState } from 'react'
-import { Header, Input, FormStatus, Footer } from '@/presentation/components'
+import { Header, Input, FormStatus, SubmitButton, Footer } from '@/presentation/components'
 import Styles from './singup-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
 import { IValidation } from '@/presentation/protocols/validation'
@@ -79,7 +79,7 @@ const SingUp: FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) =
       <Input type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
       <Input type="password" name="passwordConfirmation" placeholder="Confirm the password"/>
-      <button data-testid="submit" className={Styles.submit} type="submit" disabled={state.isInvalidForm}>Enter</button>
+      <SubmitButton text='Cadastrar'/>
       <Link data-testid="login" to="/login" replace className={Styles.link}>Log In</Link>
       <FormStatus />
     </form>

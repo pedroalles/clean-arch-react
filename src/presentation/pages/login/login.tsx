@@ -1,5 +1,5 @@
 import { FC, FormEvent, useEffect, useState } from 'react'
-import { Header, Input, FormStatus, Footer } from '@/presentation/components'
+import { Header, Input, FormStatus, Footer, SubmitButton } from '@/presentation/components'
 import Styles from './login-styles.scss'
 import Context from '@/presentation/contexts/form/form-context'
 import { IValidation } from '@/presentation/protocols/validation'
@@ -16,6 +16,7 @@ const Login: FC<Props> = ({ validation, authentication, saveAccessToken }: Props
   const history = useHistory()
   const [state, setState] = useState({
     isLoading: false,
+    isInvalidForm: true,
     email: '',
     password: ''
   })
@@ -38,6 +39,15 @@ const Login: FC<Props> = ({ validation, authentication, saveAccessToken }: Props
       password: validation.validate('password', state.password)
     }))
   }, [state.password])
+
+  useEffect(() => {
+    const email = validation.validate('email', state.email)
+    const password = validation.validate('password', state.password)
+    setState(prevState => ({
+      ...prevState,
+      isInvalidForm: !!email || !!password
+    }))
+  }, [state.email, state.password])
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
@@ -62,7 +72,7 @@ const Login: FC<Props> = ({ validation, authentication, saveAccessToken }: Props
       <h2>Login</h2>
       <Input data-testid="email" type="email" name="email" placeholder="Enter your e-mail" />
       <Input type="password" name="password" placeholder="Enter your password"/>
-      <button className={Styles.submit} data-testid="submit" type="submit" disabled={!!errorState.email || !!errorState.password}>Enter</button>
+      <SubmitButton text='Entrar' />
       <Link data-testid="singup" to="/singup" className={Styles.link}>Sing Up</Link>
       <FormStatus />
     </form>
